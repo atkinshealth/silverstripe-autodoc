@@ -1,0 +1,11 @@
+---
+Name: autodoc-module
+---
+SilverStripe\Dev\DevelopmentAdmin:
+  registered_controllers:
+    autodoc:
+      controller: AtkinsHealth\AutoDoc\AutoDocController
+      links:
+        autodoc: 'Automatically generate PHPDoc comments for DataObject subclasses.'
+AtkinsHealth\AutoDoc\AutoDocController:
+  default_module: app

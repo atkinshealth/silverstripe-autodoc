@@ -110,6 +110,10 @@ if (!class_exists(Codemod::class)) {
                                 $class = array_pop($exp);
                                 $comment .= "\n * @method $class $name()";
                                 $comment .= "\n * @property int {$name}ID";
+
+                                if ($desc == DataObject::class) {
+                                    $comment .= "\n * @property string {$name}Class";
+                                }
                             }
                         }
                         $hasMany = Config::inst()->get(

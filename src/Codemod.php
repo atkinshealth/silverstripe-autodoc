@@ -124,7 +124,9 @@ if (!class_exists(Codemod::class)) {
                         if ($hasMany) {
                             foreach ($hasMany as $name => $desc) {
                                 $shouldReplace = true;
-                                $comment .= "\n * @method \SilverStripe\ORM\HasManyList $name()";
+                                $exp = explode('\\', $desc);
+                                $class = array_pop($exp);
+                                $comment .= "\n * @method \SilverStripe\ORM\HasManyList|\IteratorAggregate<int,$class> $name()";
                             }
                         }
                         $manyMany = Config::inst()->get(
@@ -137,7 +139,9 @@ if (!class_exists(Codemod::class)) {
                                 if (is_array($desc)) {
                                     $comment .= "\n * @method \SilverStripe\ORM\ManyManyThroughList $name()";
                                 } else {
-                                    $comment .= "\n * @method \SilverStripe\ORM\ManyManyList $name()";
+                                    $exp = explode('\\', $desc);
+                                    $class = array_pop($exp);
+                                    $comment .= "\n * @method \SilverStripe\ORM\ManyManyList|\IteratorAggregate<int,$class> $name()";
                                 }
                             }
                         }

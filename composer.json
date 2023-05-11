@@ -9,7 +9,7 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": "^7 | ^8",
-        "silverstripe/framework": "^4.0",
+        "silverstripe/framework": "^4.0 || ^5",
         "atanamo/php-codeshift": "^1"
     },
     "require-dev": {

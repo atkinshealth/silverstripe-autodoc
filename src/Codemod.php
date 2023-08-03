@@ -103,19 +103,27 @@ if (!class_exists(Codemod::class)) {
                             'has_one',
                             Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
                         );
-                        if ($hasOne) {
-                            foreach ($hasOne as $name => $desc) {
-                                $shouldReplace = true;
-                                $exp = explode('\\', $desc);
-                                $class = array_pop($exp);
-                                $comment .= "\n * @method $class $name()";
-                                $comment .= "\n * @property int {$name}ID";
+                        $belongsTo = Config::inst()->get(
+                            $className,
+                            'belongs_to',
+                            Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+                        );
+                        foreach ([$hasOne, $belongsTo] as $rel) {
+                            if ($rel) {
+                                foreach ($rel as $name => $desc) {
+                                    $shouldReplace = true;
+                                    $exp = explode('\\', strtok($desc, '.'));
+                                    $class = array_pop($exp);
+                                    $comment .= "\n * @method $class $name()";
+                                    $comment .= "\n * @property int {$name}ID";
 
-                                if ($desc == DataObject::class) {
-                                    $comment .= "\n * @property string {$name}Class";
+                                    if ($desc == DataObject::class) {
+                                        $comment .= "\n * @property string {$name}Class";
+                                    }
                                 }
                             }
                         }
+
                         $hasMany = Config::inst()->get(
                             $className,
                             'has_many',
@@ -124,9 +132,9 @@ if (!class_exists(Codemod::class)) {
                         if ($hasMany) {
                             foreach ($hasMany as $name => $desc) {
                                 $shouldReplace = true;
-                                $exp = explode('\\', $desc);
+                                $exp = explode('\\', strtok($desc, '.'));
                                 $class = array_pop($exp);
-                                $comment .= "\n * @method \SilverStripe\ORM\HasManyList|\IteratorAggregate<int,$class> $name()";
+                                $comment .= "\n * @method \SilverStripe\ORM\HasManyList<$class> $name()";
                             }
                         }
                         $manyMany = Config::inst()->get(
@@ -139,12 +147,25 @@ if (!class_exists(Codemod::class)) {
                                 if (is_array($desc)) {
                                     $comment .= "\n * @method \SilverStripe\ORM\ManyManyThroughList $name()";
                                 } else {
-                                    $exp = explode('\\', $desc);
+                                    $exp = explode('\\', strtok($desc, '.'));
                                     $class = array_pop($exp);
-                                    $comment .= "\n * @method \SilverStripe\ORM\ManyManyList|\IteratorAggregate<int,$class> $name()";
+                                    $comment .= "\n * @method \SilverStripe\ORM\ManyManyList<$class> $name()";
                                 }
                             }
                         }
+                        $belongsManyMany = Config::inst()->get(
+                            $className,
+                            'belongs_many_many',
+                            Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+                        );
+                        if ($belongsManyMany) {
+                            foreach ($belongsManyMany as $name => $desc) {
+                                $exp = explode('\\', strtok($desc, '.'));
+                                $class = array_pop($exp);
+                                $comment .= "\n * @method \SilverStripe\ORM\ManyManyList<$class> $name()";
+                            }
+                        }
+
 
                         $comment .= "\n */";
                         if ($shouldReplace) {

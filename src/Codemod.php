@@ -108,14 +108,16 @@ if (!class_exists(Codemod::class)) {
                             'belongs_to',
                             Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
                         );
-                        foreach ([$hasOne, $belongsTo] as $rel) {
+                        foreach ([[$hasOne, true], [$belongsTo, false]] as [$rel, $includeID]) {
                             if ($rel) {
                                 foreach ($rel as $name => $desc) {
                                     $shouldReplace = true;
                                     $exp = explode('\\', strtok($desc, '.'));
                                     $class = array_pop($exp);
                                     $comment .= "\n * @method $class $name()";
-                                    $comment .= "\n * @property int {$name}ID";
+                                    if ($includeID) {
+                                        $comment .= "\n * @property int {$name}ID";
+                                    }
 
                                     if ($desc == DataObject::class) {
                                         $comment .= "\n * @property string {$name}Class";

@@ -20,6 +20,7 @@ class AutoDocController extends Controller
     public function autodoc(HTTPRequest $request)
     {
         $module = $request->getVar('module') ?: self::config()->get('default_module');
+        $exclude = self::config()->get('exclude') ?? [];
 
         $module = ModuleLoader::getModule($module);
         $workPath = $module->getPath();
@@ -30,7 +31,8 @@ class AutoDocController extends Controller
         $runner->addCodemod($codemodPath);
         $runner->execute(
             $workPath,
-            $workPath
+            $workPath,
+            $exclude
         );
     }
 }

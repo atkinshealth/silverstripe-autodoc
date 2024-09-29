@@ -14,8 +14,6 @@ composer require --dev atkinshealth/silverstripe-autodoc 1.x-dev
 ## License
 See [License](LICENSE.md)
 
-You can use [choosealicense.com](http://choosealicense.com) to help pick a suitable license for your project.
-
 ## Documentation
 As this module directly modifies your source .php files, it is recommended that you only run it on projects in source control, with a clean working copy. To run the docblock generation, visit `/dev/autodoc` through sake
 
